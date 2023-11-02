@@ -361,9 +361,7 @@ img {
 
 }
 
-.chat-container .my-message i {
-    color: yellow;
-}
+
 
 .message-box.friend-message::before {
     content: '';

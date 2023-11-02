@@ -1,39 +1,5 @@
-// Sample chat data in JSON format
-const chatData = [
-    { type: 'my-message', text: 'Hi, how can I help you?', time: '10:00 AM' },
-    { type: 'friend-message', text: 'Hi, I have a question about the project.', time: '10:05 AM' },
-    // Add more messages as needed
-];
-
-
-
-// Function to render chat messages
-function renderChatMessages() {
-    const chatContainer = document.querySelector('.chat-container');
-    chatContainer.innerHTML = '';
-
-    chatData.forEach((message) => {
-        const messageBox = document.createElement('div');
-        messageBox.className = `message-box ${message.type}`;
-
-        const messageText = document.createElement('p');
-        messageText.textContent = message.text;
-
-        const messageTime = document.createElement('span');
-        messageTime.textContent = message.time;
-
-        messageText.appendChild(messageTime);
-
-        messageBox.appendChild(messageText);
-
-        chatContainer.appendChild(messageBox);
-    });
-}
-
-// Call the function to initially render chat messages
-renderChatMessages();
-
 function updateUser2FromUser1(user1ClassName, user2ClassName) {
+    
     // Get the user1 elements
     const user1Elements = document.querySelectorAll(`.${user1ClassName}`);
     
@@ -79,33 +45,109 @@ copyImageSrc('dp1', 'dp2');
 
 
 
-// Get references to the input box and send button
-const inputBox = document.getElementById('messageInput');
-const sendButton = document.querySelector('.fa-solid.fa-paper-plane');
+// Function to render chat messages for a specific chat container
+function renderChatMessages(chatContainer, messages) {
+    chatContainer.innerHTML = '';
 
-// Add an event listener to the input box for the "Enter" key press
-inputBox.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault(); // Prevent line breaks in the input box
+    messages.forEach((message) => {
+        const messageBox = document.createElement('div');
+        messageBox.className = `message-box ${message.type}`;
 
+        const messageText = document.createElement('p');
+        messageText.textContent = message.text;
+
+        const messageTime = document.createElement('span');
+        messageTime.textContent = message.time;
+
+        messageText.appendChild(messageTime);
+
+        messageBox.appendChild(messageText);
+
+        chatContainer.appendChild(messageBox);
+    });
+}
+
+// Sample chat containers
+const chatContainers = document.querySelectorAll('.chat-container');
+
+// Sample chat data for each chat container
+const chatData = [
+    // Array of chat messages for the first chat container
+    [
+        { type: 'my-message', text: 'Hello!', time: '10:00 AM' },
+        { type: 'friend-message', text: 'Hi there!', time: '10:05 AM' },
+    ],
+    // Array of chat messages for the second chat container
+    [
+        { type: 'my-message', text: 'Where are you?', time: '11:00 AM' },
+        { type: 'friend-message', text: 'I\'ll be there', time: '10:49 AM' },
+    ],
+    // Array of chat messages for the second chat container
+    [
+        { type: 'my-message', text: 'How are you?', time: '11:00 AM' },
+        { type: 'friend-message', text: '“Make somebody\'s day.”', time: '09:49 AM' },
+    ],
+    // Array of chat messages for the second chat container
+    [
+        { type: 'my-message', text: 'Hey?', time: '11:00 AM' },
+        { type: 'friend-message', text: 'Dreams come true', time: '08:49 AM' },
+    ],
+    // Array of chat messages for the second chat container
+    [
+        { type: 'my-message', text: 'Are you ready?', time: '11:00 AM' },
+        { type: 'friend-message', text: 'Awesome! I\'ll start a videocall', time: '11:05 AM' },
+    ],
+    // Array of chat messages for the second chat container
+    [
+        { type: 'my-message', text: 'How are you?', time: '11:00 AM' },
+        { type: 'friend-message', text: 'I am good, thanks!', time: '11:05 AM' },
+    ],
+    // Array of chat messages for the second chat container
+    [
+        { type: 'my-message', text: 'How are you?', time: '11:00 AM' },
+        { type: 'friend-message', text: 'I am good, thanks!', time: '11:05 AM' },
+    ],
+    // Array of chat messages for the second chat container
+    [
+        { type: 'my-message', text: 'How are you?', time: '11:00 AM' },
+        { type: 'friend-message', text: 'I am good, thanks!', time: '11:05 AM' },
+    ]
+];
+
+// Call the function to initially render chat messages for each chat container
+chatContainers.forEach((chatContainer, index) => {
+    renderChatMessages(chatContainer, chatData[index]);
+});
+
+// Get references to the input boxes and send buttons
+const inputBoxes = document.querySelectorAll('[id^="messageInput"]');
+const sendButtons = document.querySelectorAll('.fa-solid.fa-paper-plane');
+
+// Add event listeners for each input box and send button
+inputBoxes.forEach((inputBox, index) => {
+    inputBox.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // Prevent line breaks in the input box
+
+            const messageText = inputBox.value.trim();
+            if (messageText) {
+                chatData[index].push({ type: 'my-message', text: messageText, time: getCurrentTime() });
+                renderChatMessages(chatContainers[index], chatData[index]);
+                inputBox.value = '';
+            }
+        }
+    });
+
+    sendButtons[index].addEventListener('click', () => {
         const messageText = inputBox.value.trim();
         if (messageText) {
-            chatData.push({ type: 'my-message', text: messageText, time: getCurrentTime() });
-            renderChatMessages();
+            chatData[index].push({ type: 'my-message', text: messageText, time: getCurrentTime() });
+            renderChatMessages(chatContainers[index], chatData[index]);
             inputBox.value = '';
         }
-    }
+    });
 });
 
-// Add a click event listener to the send button
-sendButton.addEventListener('click', () => {
-    const messageText = inputBox.value.trim();
-    if (messageText) {
-        chatData.push({ type: 'my-message', text: messageText, time: getCurrentTime() });
-        renderChatMessages();
-        inputBox.value = '';
-    }
-});
 
 
 // Function to get the current time in HH:mm AM/PM format
